@@ -1,0 +1,156 @@
+# ============================================================
+# ROOT .htaccess - Ethio Areb Foreign Employment
+# Remove .php extension, SEO friendly URLs
+# ============================================================
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# ============================================================
+# REMOVE .php EXTENSION
+# ============================================================
+
+# Redirect requests with .php to without .php
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Internally rewrite without .php to .php file
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*?)/?$ $1.php [L]
+
+# ============================================================
+# SEO FRIENDLY URLS
+# ============================================================
+
+# Home
+RewriteRule ^$ index.php [L]
+
+# Pages (remove .php)
+RewriteRule ^about$ about.php [L]
+RewriteRule ^services$ services.php [L]
+RewriteRule ^gallery$ gallery.php [L]
+RewriteRule ^blog$ blog.php [L]
+RewriteRule ^team$ team.php [L]
+RewriteRule ^testimonials$ testimonials.php [L]
+RewriteRule ^contact$ contact.php [L]
+RewriteRule ^faqs$ faqs.php [L]
+RewriteRule ^apply$ apply.php [L]
+RewriteRule ^privacy$ privacy-policy.php [L]
+RewriteRule ^terms$ terms-conditions.php [L]
+
+# Service Detail
+RewriteRule ^service/([a-zA-Z0-9-]+)$ service-detail.php?slug=$1 [L]
+
+# Blog Detail
+RewriteRule ^blog/([a-zA-Z0-9-]+)$ blog-detail.php?slug=$1 [L]
+
+# ============================================================
+# CMS ADMIN PANEL
+# ============================================================
+
+RewriteRule ^ethioareb - [L]
+
+# ============================================================
+# SECURITY HEADERS
+# ============================================================
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>
+
+# ============================================================
+# PROTECT SENSITIVE FILES
+# ============================================================
+
+<FilesMatch "^(config|db_config|settings|database)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ============================================================
+# PROTECT UPLOADS DIRECTORY
+# ============================================================
+
+<Directory "uploads">
+    Options -Indexes
+    Order allow,deny
+    Deny from all
+</Directory>
+
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|pdf|doc|docx|mp4|webm)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# ============================================================
+# PREVENT DIRECTORY LISTING
+# ============================================================
+
+Options -Indexes
+
+# ============================================================
+# ERROR PAGES
+# ============================================================
+
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php
+
+# ============================================================
+# CACHING
+# ============================================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# ============================================================
+# GZIP COMPRESSION
+# ============================================================
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json
+</IfModule>
+
+# ============================================================
+# PHP SETTINGS
+# ============================================================
+
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+# ============================================================
+# CUSTOM 404 FOR MISSING PAGES
+# ============================================================
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ 404.php [L]
+
+# ============================================================
+# END OF .htaccess
+# ============================================================
